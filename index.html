@@ -1,488 +1,710 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PilaMarket • The Information Markets Platform</title>
+    <title>PilaMarket | Decifre o Futuro</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
         :root {
-            --bg-base: #0e1014;
-            --bg-panel: #1c1e23;
-            --bg-hover: #2b2f36;
-            --border-color: #2b2f36;
+            /* Cores de Alto Contraste - Estilo Polymarket Dark */
+            --bg-black: #030303;
+            --bg-card: #111214;
+            --bg-input: #1c1e22;
+            --border-dim: #2d2f35;
+            --text-pure: #ffffff;
+            --text-silver: #94a3b8;
             --poly-blue: #2152ff;
-            --poly-green: #00c853;
-            --poly-green-bg: rgba(0, 200, 83, 0.15);
-            --poly-red: #ff3d00;
-            --poly-red-bg: rgba(255, 61, 0, 0.15);
-            --text-main: #ffffff;
-            --text-muted: #8b94a3;
+            --poly-green: #00d395;
+            --poly-red: #ff4a4a;
+            --poly-gold: #f59e0b;
         }
 
-        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; margin: 0; }
-        
-        /* Navbar */
-        .navbar { background: var(--bg-base); border-bottom: 1px solid var(--border-color); padding: 12px 24px; }
-        .nav-balance { background: var(--bg-panel); padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; }
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-pure);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
 
-        /* Layout Main */
-        .market-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 8px; }
-        .market-stats { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; margin-bottom: 20px; }
-        
-        .panel { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; }
-        
-        /* Order Ticket (Lateral Direita) */
-        .order-ticket { position: sticky; top: 20px; }
-        .btn-yes { background: var(--bg-base); color: var(--poly-green); border: 1px solid var(--border-color); font-weight: 600; width: 100%; padding: 12px; border-radius: 8px; transition: 0.2s; }
-        .btn-yes:hover, .btn-yes.active { background: var(--poly-green-bg); border-color: var(--poly-green); }
-        .btn-no { background: var(--bg-base); color: var(--poly-red); border: 1px solid var(--border-color); font-weight: 600; width: 100%; padding: 12px; border-radius: 8px; transition: 0.2s; }
-        .btn-no:hover, .btn-no.active { background: var(--poly-red-bg); border-color: var(--poly-red); }
-        
-        .input-amount { background: var(--bg-base); border: 1px solid var(--border-color); color: white; font-size: 1.5rem; font-weight: 600; padding: 15px; border-radius: 8px; width: 100%; text-align: right; outline: none; }
-        .input-amount:focus { border-color: var(--poly-blue); }
-        
-        .summary-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
-        .summary-val { color: var(--text-main); font-weight: 600; }
-        
-        .btn-buy { background: var(--poly-blue); color: white; border: none; font-weight: 600; width: 100%; padding: 15px; border-radius: 8px; font-size: 1rem; margin-top: 15px; }
-        .btn-buy:hover { background: #1a41cc; }
+        /* --- LOGO PILAMARKET --- */
+        .pila-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            color: var(--text-pure);
+            text-decoration: none;
+        }
+        .pila-logo span { color: var(--poly-blue); }
+        .pila-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--poly-blue), #5e81ff);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(33, 82, 255, 0.4);
+        }
+
+        /* --- INTERFACE ESTRUTURAL --- */
+        .navbar {
+            background: rgba(3, 3, 3, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-dim);
+            padding: 12px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .main-container { padding: 30px 40px; max-width: 1600px; margin: 0 auto; }
+
+        /* Estilo dos Cards (Embeds) */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 16px;
+            padding: 24px;
+            transition: border-color 0.3s ease;
+        }
+        .glass-card:hover { border-color: #3f424a; }
+
+        /* Tipografia de Contraste */
+        h1.market-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text-pure);
+        }
+        .stat-label { color: var(--text-silver); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+        .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--text-pure); }
+
+        /* Botões de Aposta */
+        .btn-side {
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .btn-yes { 
+            background: rgba(0, 211, 149, 0.08); 
+            color: var(--poly-green); 
+            border-color: rgba(0, 211, 149, 0.2);
+        }
+        .btn-yes:hover, .btn-yes.active { 
+            background: var(--poly-green); 
+            color: var(--bg-black); 
+            box-shadow: 0 0 20px rgba(0, 211, 149, 0.3);
+        }
+        .btn-no { 
+            background: rgba(255, 74, 74, 0.08); 
+            color: var(--poly-red); 
+            border-color: rgba(255, 74, 74, 0.2);
+        }
+        .btn-no:hover, .btn-no.active { 
+            background: var(--poly-red); 
+            color: white; 
+            box-shadow: 0 0 20px rgba(255, 74, 74, 0.3);
+        }
+
+        /* Order Ticket (Painel Direita) */
+        .order-ticket { position: sticky; top: 100px; }
+        .amount-input-wrapper {
+            background: var(--bg-input);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .amount-input-wrapper input {
+            background: transparent;
+            border: none;
+            color: var(--text-pure);
+            font-size: 1.8rem;
+            font-weight: 700;
+            width: 100%;
+            outline: none;
+        }
+        .amount-input-wrapper span { color: var(--text-silver); font-weight: 700; }
 
         /* Tabs e Listas */
-        .nav-tabs { border-bottom: 1px solid var(--border-color); }
-        .nav-link { color: var(--text-muted); font-weight: 500; border: none !important; padding: 10px 0; margin-right: 20px; background: transparent !important; }
-        .nav-link.active { color: var(--text-main); border-bottom: 2px solid var(--poly-blue) !important; }
-        
-        .list-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
-        
-        #chat-box { height: 250px; overflow-y: auto; padding-right: 10px; }
-        .msg { margin-bottom: 10px; font-size: 0.9rem; }
-        .msg-user { font-weight: 600; color: var(--poly-blue); }
+        .nav-pills .nav-link {
+            color: var(--text-silver);
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+        .nav-pills .nav-link.active { background: var(--poly-blue); color: white; }
 
-        /* Admin Box */
-        .admin-box { border: 1px solid #eab308; background: rgba(234, 179, 8, 0.05); }
+        .data-table { width: 100%; margin-top: 15px; }
+        .data-table th { color: var(--text-silver); font-size: 0.75rem; text-transform: uppercase; padding: 10px; border-bottom: 1px solid var(--border-dim); }
+        .data-table td { padding: 12px 10px; border-bottom: 1px solid var(--border-dim); font-size: 0.9rem; }
+
+        /* Chat */
+        #chat-window {
+            height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-right: 10px;
+        }
+        .chat-msg { background: #1a1c20; padding: 10px 14px; border-radius: 12px; border-left: 3px solid var(--poly-blue); }
+        .chat-user { font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; display: block; }
+        .chat-text { font-size: 0.9rem; line-height: 1.4; color: #e2e8f0; }
+
+        /* Scrollbar Personalizada */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-black); }
+        ::-webkit-scrollbar-thumb { background: var(--border-dim); border-radius: 10px; }
+
+        /* Badge Admin */
+        .admin-badge { background: var(--poly-gold); color: black; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; }
+        
+        .potential-box {
+            background: rgba(33, 82, 255, 0.05);
+            border: 1px dashed var(--poly-blue);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        /* Gráfico */
+        .chart-container { height: 400px; width: 100%; }
     </style>
 </head>
 <body>
 
 <nav class="navbar d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-center gap-2">
-        <div style="width: 28px; height: 28px; background: var(--poly-blue); border-radius: 50%;"></div>
-        <span class="fs-5 fw-bold">PilaMarket</span>
-    </div>
-    <div class="d-flex gap-3 align-items-center">
-        <div class="nav-balance">
-            <span id="user-name" class="text-muted me-2">Visitante</span>
-            <span id="balance-display">$0.00</span>
+    <a href="#" class="pila-logo">
+        <div class="pila-icon"><i class="bi bi-graph-up-arrow text-white"></i></div>
+        Pila<span>Market</span>
+    </a>
+    <div class="d-flex align-items-center gap-4">
+        <div class="d-none d-md-flex gap-4 me-4">
+            <div><span class="stat-label">Mercados</span><br><span class="stat-value">Explorar</span></div>
+            <div><span class="stat-label">Atividade</span><br><span class="stat-value">Live</span></div>
         </div>
-        <button class="btn btn-outline-secondary btn-sm" onclick="showProfileModal()">Trocar Conta</button>
+        <div class="d-flex align-items-center gap-3">
+            <div id="wallet-info" class="text-end">
+                <span id="display-username" class="fw-bold" style="font-size: 0.9rem;">Visitante</span><br>
+                <span id="display-balance" class="text-success fw-bold">$0.00 USDC</span>
+            </div>
+            <button class="btn btn-outline-light btn-sm rounded-pill px-3" onclick="openLoginModal()">Mudar Perfil</button>
+        </div>
     </div>
 </nav>
 
-<div class="container py-4">
+<div class="main-container">
     <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/2560px-Flag_of_Brazil.svg.png" width="40" height="28" style="border-radius: 4px;">
-                <h1 class="market-title m-0">O Brasil vai sediar a Copa do Mundo de 2030?</h1>
-            </div>
-            <div class="market-stats">
-                <span id="total-vol">$0.00 Vol.</span> • <span class="text-success" id="price-yes-header">50¢ Sim</span> • <span class="text-danger" id="price-no-header">50¢ Não</span>
-            </div>
-
-            <div class="panel mb-4" style="height: 350px;">
-                <canvas id="marketChart"></canvas>
-            </div>
-
-            <ul class="nav nav-tabs mb-3" id="marketTabs" role="tablist">
-                <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#portfolio">O Meu Portfólio</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#chat">Comunidade</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#leaderboard">Leaderboard</button></li>
-            </ul>
-
-            <div class="tab-content panel">
-                <div class="tab-pane fade show active" id="portfolio">
-                    <div id="portfolio-content">
-                        </div>
-                </div>
-                
-                <div class="tab-pane fade" id="chat">
-                    <div id="chat-box" class="mb-3"></div>
-                    <div class="input-group">
-                        <input type="text" id="chat-input" class="form-control bg-dark text-white border-secondary" placeholder="Manda a tua posta de pescada...">
-                        <button class="btn btn-primary" onclick="sendMessage()">Enviar</button>
+        <div class="col-xl-8">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h1 class="market-title">O Bitcoin atingirá $150,000 antes de Junho de 2026?</h1>
+                    <div class="d-flex gap-3 mt-2">
+                        <span class="badge bg-dark border border-secondary p-2"><i class="bi bi-clock me-1"></i> Termina em 62 dias</span>
+                        <span class="badge bg-dark border border-secondary p-2"><i class="bi bi-layers me-1"></i> $128,450 Vol. Total</span>
                     </div>
                 </div>
+                <div class="text-end">
+                    <span class="stat-label">Preço Atual</span>
+                    <h2 id="current-price-display" class="fw-800 m-0 text-success">52¢</h2>
+                </div>
+            </div>
 
-                <div class="tab-pane fade" id="leaderboard">
-                    <div id="leaderboard-content"></div>
+            <div class="glass-card mb-4">
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <ul class="nav nav-pills mb-4" id="pills-tab" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-portfolio">Meus Ativos</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-history">Histórico de Ordens</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-chat">Chat Global</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-ranks">Ranking</button></li>
+                </ul>
+
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="tab-portfolio">
+                        <div id="portfolio-empty" class="text-center py-5">
+                            <i class="bi bi-wallet2 fs-1 text-secondary mb-3 d-block"></i>
+                            <p class="text-silver">Ainda não tens posições neste mercado.</p>
+                        </div>
+                        <div id="portfolio-list" class="d-none">
+                            <table class="data-table">
+                                <thead><tr><th>Resultado</th><th>Ações</th><th>Preço Médio</th><th>Valor Atual</th></tr></thead>
+                                <tbody id="portfolio-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-history">
+                        <table class="data-table">
+                            <thead><tr><th>Data</th><th>Utilizador</th><th>Tipo</th><th>Valor</th><th>Preço</th></tr></thead>
+                            <tbody id="history-body"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-chat">
+                        <div id="chat-window" class="mb-3"></div>
+                        <div class="input-group">
+                            <input type="text" id="chat-input" class="form-control bg-dark text-white border-secondary" placeholder="Escreve uma mensagem...">
+                            <button class="btn btn-primary" onclick="handleSendMessage()">Enviar</button>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-ranks">
+                        <table class="data-table">
+                            <thead><tr><th>#</th><th>Utilizador</th><th>Património Total</th><th>Lucro/Prejuízo</th></tr></thead>
+                            <tbody id="leaderboard-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4">
-            <div class="panel order-ticket mb-4">
-                <h5 class="fw-bold mb-3">Comprar</h5>
+        <div class="col-xl-4">
+            <div class="glass-card order-ticket">
+                <h5 class="fw-800 mb-4">Negociar</h5>
                 
-                <div class="row g-2 mb-4">
-                    <div class="col-6">
-                        <button id="opt-yes" class="btn-yes" onclick="selectOption('SIM')">
-                            Sim <span id="price-yes-btn" class="ms-1">50¢</span>
-                        </button>
+                <div class="d-flex gap-2">
+                    <button id="btn-select-yes" class="btn-side btn-yes active" onclick="setTradeOption('SIM')">SIM</button>
+                    <button id="btn-select-no" class="btn-side btn-no" onclick="setTradeOption('NÃO')">NÃO</button>
+                </div>
+
+                <div class="amount-input-wrapper d-flex align-items-center">
+                    <span>$</span>
+                    <input type="number" id="trade-amount" placeholder="0" oninput="updateTradePreview()">
+                    <span class="ms-2">USDC</span>
+                </div>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-silver small fw-bold">Preço por Ação</span>
+                    <span id="preview-price-per-share" class="fw-bold">0.50¢</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-silver small fw-bold">Ações a Receber</span>
+                    <span id="preview-shares" class="fw-bold">0.00</span>
+                </div>
+
+                <div class="potential-box">
+                    <div class="d-flex justify-content-between">
+                        <span class="text-silver small fw-bold">Retorno se Vencer</span>
+                        <span id="preview-payout" class="text-success fw-bold">$0.00</span>
                     </div>
-                    <div class="col-6">
-                        <button id="opt-no" class="btn-no" onclick="selectOption('NÃO')">
-                            Não <span id="price-no-btn" class="ms-1">50¢</span>
-                        </button>
+                    <div class="progress mt-2" style="height: 4px; background: #2d2f35;">
+                        <div id="roi-bar" class="progress-bar bg-success" style="width: 0%"></div>
                     </div>
                 </div>
 
-                <div class="mb-3 position-relative">
-                    <span style="position: absolute; left: 15px; top: 15px; color: var(--text-muted); font-weight: 600;">$</span>
-                    <input type="number" id="bet-amount" class="input-amount" placeholder="0" oninput="calculateTrade()">
-                </div>
+                <button class="btn btn-primary w-100 py-3 mt-4 fw-bold rounded-3" style="font-size: 1.1rem;" onclick="executeTrade()">
+                    Confirmar Compra
+                </button>
 
-                <div class="summary-row">
-                    <span>Preço Médio</span>
-                    <span class="summary-val" id="summary-price">0.00¢</span>
-                </div>
-                <div class="summary-row">
-                    <span>Ações Estimadas</span>
-                    <span class="summary-val" id="summary-shares">0.00</span>
-                </div>
-                <div class="summary-row">
-                    <span>Retorno Potencial</span>
-                    <span class="summary-val text-success" id="summary-return">$0.00 (0%)</span>
-                </div>
-
-                <button class="btn-buy" onclick="executeTrade()">Comprar</button>
+                <p class="text-center text-silver mt-3 mb-0" style="font-size: 0.75rem;">
+                    Taxa de transação: <b>$0.00 (Zero Fee)</b>
+                </p>
             </div>
 
-            <div id="admin-section" class="panel admin-box d-none">
-                <h6 class="text-warning fw-bold mb-3">👑 Admin Zone</h6>
-                <div class="d-flex gap-2 mb-2">
-                    <button class="btn btn-success btn-sm w-100" onclick="resolveMarket('SIM')">Venceu SIM</button>
-                    <button class="btn btn-danger btn-sm w-100" onclick="resolveMarket('NÃO')">Venceu NÃO</button>
+            <div id="admin-panel" class="glass-card mt-4 border-warning d-none">
+                <h6 class="text-warning fw-800 mb-3"><i class="bi bi-shield-lock me-2"></i>PAINEL DE RESOLUÇÃO</h6>
+                <div class="row g-2">
+                    <div class="col-6"><button class="btn btn-outline-success btn-sm w-100" onclick="resolveMarket('SIM')">Fechar (SIM)</button></div>
+                    <div class="col-6"><button class="btn btn-outline-danger btn-sm w-100" onclick="resolveMarket('NÃO')">Fechar (NÃO)</button></div>
                 </div>
-                <button class="btn btn-outline-light btn-sm w-100" onclick="exportToPDF()">Exportar PDF</button>
+                <button class="btn btn-outline-light btn-sm w-100 mt-2" onclick="downloadMarketReport()"><i class="bi bi-file-earmark-pdf me-1"></i> Exportar Ledger</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="profileModal" tabindex="-1" data-bs-backdrop="static">
+<div class="modal fade" id="loginModal" data-bs-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content" style="background: var(--bg-panel); color: white;">
+        <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border-dim);">
             <div class="modal-body p-4 text-center">
-                <h5 class="fw-bold mb-4">Entrar como:</h5>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-outline-light" onclick="login('Sá')">Sá</button>
-                    <button class="btn btn-outline-light" onclick="login('Pedro')">Pedro</button>
-                    <button class="btn btn-outline-light" onclick="login('Silva')">Silva</button>
-                    <button class="btn btn-outline-warning mt-2" onclick="promptAdmin()">Admin</button>
-                </div>
+                <div class="pila-icon mx-auto mb-3" style="width: 50px; height: 50px;"><i class="bi bi-person-circle fs-3 text-white"></i></div>
+                <h5 class="fw-800 text-white mb-4">Escolha a sua conta</h5>
+                <div class="d-grid gap-2" id="user-selector">
+                    </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- ESTADO (AMM Baseado em Ações) ---
-    // Em Polymarket: Preço SIM + Preço NÃO = $1.00
-    // Cada ação vencedora paga $1.00.
-    const DEFAULT_USERS = {
-        "Sá": { balance: 100, sharesYes: 0, sharesNo: 0 },
-        "Pedro": { balance: 100, sharesYes: 0, sharesNo: 0 },
-        "Silva": { balance: 100, sharesYes: 0, sharesNo: 0 },
-        "Admin": { balance: 1000, sharesYes: 0, sharesNo: 0 } // Admin tem guito e joga também
-    };
+    /**
+     * MOTOR LOGICO PILAMARKET PRO
+     * Algoritmo: AMM (Automated Market Maker) com Slippage dinâmico
+     * Persistência: LocalStorage
+     */
 
-    let state = JSON.parse(localStorage.getItem('polyCloneState')) || {
-        users: DEFAULT_USERS,
-        poolYes: 50, // Liquidez inicial ($)
-        poolNo: 50,
-        volume: 0,
-        history: [], // Histórico de preços
-        bets: [],    // Histórico de apostas para o PDF
+    // --- CONFIGURAÇÃO INICIAL E ESTADO ---
+    const USERS = ["Sá", "Pedro", "Silva", "Admin"];
+    let state = JSON.parse(localStorage.getItem('pilaMarket_v3')) || {
+        accounts: {
+            "Sá": { balance: 1000, sharesYes: 0, sharesNo: 0, profit: 0 },
+            "Pedro": { balance: 1000, sharesYes: 0, sharesNo: 0, profit: 0 },
+            "Silva": { balance: 1000, sharesYes: 0, sharesNo: 0, profit: 0 },
+            "Admin": { balance: 5000, sharesYes: 0, sharesNo: 0, profit: 0 }
+        },
+        market: {
+            liquidityYes: 500, // Liquidez inicial para evitar vantagem do primeiro/último
+            liquidityNo: 500,
+            volume: 0,
+            resolved: false,
+            winner: null
+        },
+        history: [], // Transações
+        chartData: [], // Pontos do gráfico
         messages: []
     };
 
     let currentUser = null;
-    let selectedOption = 'SIM'; // Default
-    let chart;
+    let selectedTradeOption = 'SIM';
+    let marketChart = null;
 
-    // --- CÁLCULO DE PREÇOS (AMM) ---
-    function getPrices() {
-        const total = state.poolYes + state.poolNo;
-        let priceYes = state.poolYes / total;
-        let priceNo = state.poolNo / total;
-        return { yes: priceYes, no: priceNo };
+    // --- MOTOR DE PREÇOS (AMM) ---
+    // Preço = Liquidez_Opção / (Liquidez_SIM + Liquidez_NÃO)
+    function getCurrentPrice(option) {
+        const total = state.market.liquidityYes + state.market.liquidityNo;
+        return option === 'SIM' ? (state.market.liquidityYes / total) : (state.market.liquidityNo / total);
     }
 
-    function updateUI() {
-        const prices = getPrices();
-        
-        // Atualiza cabeçalho e botões
-        document.getElementById('price-yes-header').innerText = `${(prices.yes * 100).toFixed(1)}¢ Sim`;
-        document.getElementById('price-no-header').innerText = `${(prices.no * 100).toFixed(1)}¢ Não`;
-        document.getElementById('price-yes-btn').innerText = `${(prices.yes * 100).toFixed(1)}¢`;
-        document.getElementById('price-no-btn').innerText = `${(prices.no * 100).toFixed(1)}¢`;
-        document.getElementById('total-vol').innerText = `$${state.volume.toFixed(2)} Vol.`;
-
-        // Botões de seleção
-        document.getElementById('opt-yes').classList.toggle('active', selectedOption === 'SIM');
-        document.getElementById('opt-no').classList.toggle('active', selectedOption === 'NÃO');
-
-        if (currentUser) {
-            const u = state.users[currentUser];
-            document.getElementById('balance-display').innerText = `$${u.balance.toFixed(2)}`;
-            document.getElementById('user-name').innerText = currentUser;
-            
-            // Portfólio
-            const portDiv = document.getElementById('portfolio-content');
-            portDiv.innerHTML = `
-                <div class="list-item"><span class="text-muted">Ações SIM (Pagam $1 se ganhar)</span> <b>${u.sharesYes.toFixed(2)}</b></div>
-                <div class="list-item"><span class="text-muted">Ações NÃO (Pagam $1 se ganhar)</span> <b>${u.sharesNo.toFixed(2)}</b></div>
-                <div class="list-item border-0"><span class="text-muted">Valor em Dinheiro Vivo</span> <b class="text-success">$${u.balance.toFixed(2)}</b></div>
-            `;
-        }
-
-        renderLeaderboard();
-        calculateTrade();
-        saveState();
-    }
-
-    // --- CÁLCULO DA TICKET ---
-    function calculateTrade() {
-        const amount = parseFloat(document.getElementById('bet-amount').value) || 0;
-        const prices = getPrices();
-        const price = selectedOption === 'SIM' ? prices.yes : prices.no;
-
-        if (amount <= 0) {
-            document.getElementById('summary-price').innerText = `${(price * 100).toFixed(1)}¢`;
-            document.getElementById('summary-shares').innerText = "0.00";
-            document.getElementById('summary-return').innerText = "$0.00 (0%)";
-            return;
-        }
-
-        // Quantas ações compro com este dinheiro? (Ação = Dinheiro / Preço)
-        const shares = amount / price;
-        // Retorno se ganhar (Cada ação paga $1, logo retorno = número de ações)
-        const potentialReturn = shares; 
-        const roi = ((potentialReturn - amount) / amount) * 100;
-
-        document.getElementById('summary-price').innerText = `${(price * 100).toFixed(1)}¢`;
-        document.getElementById('summary-shares').innerText = shares.toFixed(2);
-        document.getElementById('summary-return').innerText = `$${potentialReturn.toFixed(2)} (+${roi.toFixed(0)}%)`;
-    }
-
-    function selectOption(opt) {
-        selectedOption = opt;
+    // --- INICIALIZAÇÃO ---
+    function init() {
+        if (state.chartData.length === 0) seedChartData();
+        renderUserSelector();
         updateUI();
+        initChart();
+        renderChat();
+        
+        const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+        if (!currentUser) modal.show();
+    }
+
+    function seedChartData() {
+        // Gera 50 pontos de histórico falso para o gráfico não parecer vazio e evitar vantagem
+        let lastPrice = 50;
+        const now = Date.now();
+        for (let i = 50; i > 0; i--) {
+            lastPrice += (Math.random() * 6 - 3);
+            if (lastPrice > 95) lastPrice = 95;
+            if (lastPrice < 5) lastPrice = 5;
+            state.chartData.push({
+                x: now - (i * 3600000), 
+                y: lastPrice.toFixed(2)
+            });
+        }
+        save();
+    }
+
+    // --- INTERFACE ---
+    function updateUI() {
+        const priceYes = getCurrentPrice('SIM');
+        const priceNo = getCurrentPrice('NÃO');
+
+        document.getElementById('current-price-display').innerText = `${(priceYes * 100).toFixed(0)}¢`;
+        document.getElementById('current-price-display').className = priceYes > 0.5 ? 'text-success fw-800' : 'text-danger fw-800';
+        
+        if (currentUser) {
+            const acc = state.accounts[currentUser];
+            document.getElementById('display-username').innerText = currentUser;
+            document.getElementById('display-balance').innerText = `$${acc.balance.toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
+            
+            // Portfolio
+            const hasPositions = acc.sharesYes > 0 || acc.sharesNo > 0;
+            document.getElementById('portfolio-empty').classList.toggle('d-none', hasPositions);
+            document.getElementById('portfolio-list').classList.toggle('d-none', !hasPositions);
+            
+            let portHtml = "";
+            if (acc.sharesYes > 0) {
+                portHtml += `<tr><td><span class="text-success fw-bold">SIM</span></td><td>${acc.sharesYes.toFixed(2)}</td><td>${(priceYes*100).toFixed(0)}¢</td><td>$${(acc.sharesYes * priceYes).toFixed(2)}</td></tr>`;
+            }
+            if (acc.sharesNo > 0) {
+                portHtml += `<tr><td><span class="text-danger fw-bold">NÃO</span></td><td>${acc.sharesNo.toFixed(2)}</td><td>${(priceNo*100).toFixed(0)}¢</td><td>$${(acc.sharesNo * priceNo).toFixed(2)}</td></tr>`;
+            }
+            document.getElementById('portfolio-body').innerHTML = portHtml;
+
+            // Admin Panel
+            document.getElementById('admin-panel').classList.toggle('d-none', currentUser !== 'Admin');
+        }
+
+        renderHistory();
+        renderLeaderboard();
+        updateTradePreview();
+    }
+
+    function updateTradePreview() {
+        const amount = parseFloat(document.getElementById('trade-amount').value) || 0;
+        const price = getCurrentPrice(selectedTradeOption);
+        
+        // Simulação de Slippage (Quanto mais compras, mais o preço sobe para ti)
+        const priceWithImpact = price + (amount / (state.market.liquidityYes + state.market.liquidityNo + amount)) * 0.1;
+        const shares = amount / priceWithImpact;
+        const payout = shares * 1.00; // No Polymarket cada ação vencedora vale $1
+        const roi = amount > 0 ? ((payout - amount) / amount) * 100 : 0;
+
+        document.getElementById('preview-price-per-share').innerText = `${(priceWithImpact * 100).toFixed(1)}¢`;
+        document.getElementById('preview-shares').innerText = shares.toFixed(2);
+        document.getElementById('preview-payout').innerText = `$${payout.toFixed(2)}`;
+        document.getElementById('roi-bar').style.width = `${Math.min(roi, 100)}%`;
+    }
+
+    // --- AÇÕES ---
+    function setTradeOption(opt) {
+        selectedTradeOption = opt;
+        document.getElementById('btn-select-yes').classList.toggle('active', opt === 'SIM');
+        document.getElementById('btn-select-no').classList.toggle('active', opt === 'NÃO');
+        updateTradePreview();
     }
 
     function executeTrade() {
+        const amount = parseFloat(document.getElementById('trade-amount').value);
         if (!currentUser) return alert("Faz login primeiro!");
-        const amount = parseFloat(document.getElementById('bet-amount').value);
-        if (!amount || amount <= 0) return alert("Insere um valor válido!");
+        if (!amount || amount <= 0) return;
         
-        const user = state.users[currentUser];
-        if (amount > user.balance) return alert("Saldo insuficiente. O teu saldo é $" + user.balance.toFixed(2));
+        const acc = state.accounts[currentUser];
+        if (amount > acc.balance) return alert("Saldo insuficiente!");
 
-        const prices = getPrices();
-        const price = selectedOption === 'SIM' ? prices.yes : prices.no;
-        const sharesBought = amount / price;
+        const price = getCurrentPrice(selectedTradeOption);
+        // Aplica o impacto na liquidez ANTES de calcular as ações (Fair Price)
+        if (selectedTradeOption === 'SIM') state.market.liquidityYes += amount;
+        else state.market.liquidityNo += amount;
 
-        // Deduz saldo e adiciona ações
-        user.balance -= amount;
-        if (selectedOption === 'SIM') {
-            user.sharesYes += sharesBought;
-            state.poolYes += amount; // Dinheiro entra na pool correspondente, subindo o seu preço
-        } else {
-            user.sharesNo += sharesBought;
-            state.poolNo += amount;
-        }
+        const finalPrice = getCurrentPrice(selectedTradeOption);
+        const shares = amount / finalPrice;
 
-        state.volume += amount;
-        state.bets.push({ user: currentUser, option: selectedOption, amount: amount, shares: sharesBought, date: new Date().toLocaleTimeString() });
-        state.history.push({ time: new Date().toLocaleTimeString(), priceYes: getPrices().yes * 100 });
+        acc.balance -= amount;
+        if (selectedTradeOption === 'SIM') acc.sharesYes += shares;
+        else acc.sharesNo += shares;
+
+        state.market.volume += amount;
         
-        addChatMessage(`comprou ${sharesBought.toFixed(1)} ações do ${selectedOption} por $${amount.toFixed(2)}.`);
+        // Registo
+        const trade = {
+            id: Date.now(),
+            user: currentUser,
+            type: selectedTradeOption,
+            amount: amount,
+            shares: shares,
+            price: (finalPrice * 100).toFixed(0),
+            date: new Date().toLocaleString()
+        };
+        state.history.unshift(trade);
+        state.chartData.push({ x: Date.now(), y: (getCurrentPrice('SIM') * 100).toFixed(2) });
+
+        addSystemMessage(`${currentUser} comprou $${amount} em ações do ${selectedTradeOption}`);
         
-        document.getElementById('bet-amount').value = '';
+        save();
         updateUI();
         updateChart();
+        document.getElementById('trade-amount').value = "";
     }
 
     // --- CHAT ---
-    function sendMessage() {
+    function handleSendMessage() {
         const input = document.getElementById('chat-input');
         if (!input.value || !currentUser) return;
-        addChatMessage(input.value, false);
+        
+        state.messages.push({
+            user: currentUser,
+            text: input.value,
+            time: new Date().toLocaleTimeString(),
+            isAdmin: currentUser === 'Admin'
+        });
         input.value = "";
+        renderChat();
+        save();
     }
 
-    function addChatMessage(msg, isTrade = false) {
-        state.messages.push({ user: currentUser, text: msg, isTrade: isTrade });
+    function addSystemMessage(txt) {
+        state.messages.push({
+            user: "SISTEMA",
+            text: txt,
+            time: new Date().toLocaleTimeString(),
+            isSystem: true
+        });
         renderChat();
     }
 
     function renderChat() {
-        const box = document.getElementById('chat-box');
-        box.innerHTML = state.messages.map(m => `
-            <div class="msg">
-                <span class="msg-user ${m.user==='Admin'?'text-warning':''}">${m.user}</span> 
-                <span style="color: ${m.isTrade ? 'var(--text-muted)' : 'var(--text-main)'}">${m.text}</span>
+        const win = document.getElementById('chat-window');
+        win.innerHTML = state.messages.map(m => `
+            <div class="chat-msg" style="${m.isSystem ? 'border-color: #64748b; opacity: 0.8;' : ''}">
+                <span class="chat-user ${m.isAdmin ? 'text-warning' : 'text-primary'}">
+                    ${m.user} ${m.isAdmin ? '<span class="admin-badge">ADMIN</span>' : ''} 
+                    <small class="text-silver fw-normal ms-2">${m.time}</small>
+                </span>
+                <div class="chat-text">${m.text}</div>
             </div>
         `).join('');
-        box.scrollTop = box.scrollHeight;
+        win.scrollTop = win.scrollHeight;
     }
 
     // --- LEADERBOARD ---
     function renderLeaderboard() {
-        const lb = document.getElementById('leaderboard-content');
-        // Calcula o valor total (Saldo + Valor estimado das ações ao preço atual)
-        const prices = getPrices();
-        const rankings = Object.entries(state.users).map(([name, data]) => {
-            const totalValue = data.balance + (data.sharesYes * prices.yes) + (data.sharesNo * prices.no);
-            return { name, totalValue };
-        }).sort((a, b) => b.totalValue - a.totalValue);
+        const body = document.getElementById('leaderboard-body');
+        const pYes = getCurrentPrice('SIM');
+        const pNo = getCurrentPrice('NÃO');
 
-        lb.innerHTML = rankings.map((r, i) => `
-            <div class="list-item">
-                <span>${i + 1}. ${r.name} ${r.name === 'Admin' ? '👑' : ''}</span>
-                <span class="fw-bold">$${r.totalValue.toFixed(2)}</span>
-            </div>
+        const sorted = Object.entries(state.accounts).map(([name, data]) => {
+            const netWorth = data.balance + (data.sharesYes * pYes) + (data.sharesNo * pNo);
+            return { name, netWorth, profit: netWorth - (name === 'Admin' ? 5000 : 1000) };
+        }).sort((a, b) => b.netWorth - a.netWorth);
+
+        body.innerHTML = sorted.map((u, i) => `
+            <tr>
+                <td>${i+1}</td>
+                <td><span class="fw-bold">${u.name}</span></td>
+                <td>$${u.netWorth.toLocaleString()}</td>
+                <td class="${u.profit >= 0 ? 'text-success' : 'text-danger'}">${u.profit >= 0 ? '+' : ''}$${u.profit.toFixed(2)}</td>
+            </tr>
         `).join('');
     }
 
-    // --- PERFIL ---
-    function login(user) {
-        if (!state.users[user]) state.users[user] = DEFAULT_USERS[user]; // Fallback
-        currentUser = user;
-        bootstrap.Modal.getInstance(document.getElementById('profileModal')).hide();
-        
-        const adminSection = document.getElementById('admin-section');
-        if (user === 'Admin') adminSection.classList.remove('d-none');
-        else adminSection.classList.add('d-none');
-        
-        updateUI();
+    function renderHistory() {
+        const body = document.getElementById('history-body');
+        body.innerHTML = state.history.slice(0, 10).map(h => `
+            <tr>
+                <td class="text-silver">${h.date.split(',')[1]}</td>
+                <td>${h.user}</td>
+                <td><span class="badge ${h.type === 'SIM' ? 'btn-yes' : 'btn-no'}">${h.type}</span></td>
+                <td>$${h.amount.toFixed(2)}</td>
+                <td>${h.price}¢</td>
+            </tr>
+        `).join('');
     }
 
-    function promptAdmin() {
-        const p = prompt("Password do Admin (1234):");
-        if (p === "1234") login('Admin');
-        else alert("Password errada.");
-    }
-
-    function showProfileModal() {
-        new bootstrap.Modal(document.getElementById('profileModal')).show();
-    }
-
-    // --- ADMIN: RESOLVER E PDF ---
+    // --- ADMIN ---
     function resolveMarket(winner) {
-        if (!confirm(`Tens a certeza que queres fechar o mercado e declarar ${winner} como vencedor?`)) return;
+        if (!confirm(`Resolver como ${winner}? Esta ação é irreversível e pagará todos os detentores de ações.`)) return;
         
-        // No Polymarket, se acertares, cada ação vale $1. As outras valem $0.
-        Object.keys(state.users).forEach(user => {
-            const u = state.users[user];
+        Object.keys(state.accounts).forEach(uName => {
+            const acc = state.accounts[uName];
             if (winner === 'SIM') {
-                u.balance += u.sharesYes * 1.00; // Paga $1 por ação SIM
+                acc.balance += acc.sharesYes * 1.00;
             } else {
-                u.balance += u.sharesNo * 1.00;  // Paga $1 por ação NÃO
+                acc.balance += acc.sharesNo * 1.00;
             }
-            // Zera as ações de todos
-            u.sharesYes = 0;
-            u.sharesNo = 0;
+            acc.sharesYes = 0;
+            acc.sharesNo = 0;
         });
 
-        alert(`MERCADO RESOLVIDO! O resultado é ${winner}. Os ganhos foram distribuídos.`);
-        
-        // Reset do mercado
-        state.poolYes = 50; 
-        state.poolNo = 50;
-        state.volume = 0;
+        state.market.resolved = true;
+        state.market.winner = winner;
         state.history = [];
-        state.bets = [];
+        state.market.liquidityYes = 500;
+        state.market.liquidityNo = 500;
         
+        alert("Mercado Liquidado!");
+        save();
         updateUI();
-        initChart(); // Limpa o gráfico
     }
 
-    function exportToPDF() {
+    function downloadMarketReport() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text("PilaMarket - Order Book Oficial", 14, 15);
-        
-        const rows = state.bets.map(b => [b.user, b.option, `$${b.amount.toFixed(2)}`, b.shares.toFixed(2), b.date]);
+        doc.setFontSize(20);
+        doc.text("PilaMarket Ledger Report", 14, 22);
+        doc.setFontSize(10);
+        doc.text(`Gerado em: ${new Date().toLocaleString()}`, 14, 30);
+
+        const rows = state.history.map(h => [h.date, h.user, h.type, `$${h.amount}`, `${h.price}c`]);
         doc.autoTable({
-            head: [['Trader', 'Lado', 'Dólares (USDC)', 'Ações Compradas', 'Hora']],
+            head: [['Data', 'Trader', 'Tipo', 'Valor', 'Preço']],
             body: rows,
-            startY: 25
+            startY: 40,
+            theme: 'grid'
         });
-        
-        doc.save("PilaMarket_Ledger.pdf");
+
+        doc.save(`pilamarket-ledger-${Date.now()}.pdf`);
     }
 
-    function saveState() {
-        localStorage.setItem('polyCloneState', JSON.stringify(state));
-    }
-
-    // --- GRÁFICO (Chart.js) ---
+    // --- CHART LOGIC ---
     function initChart() {
-        const ctx = document.getElementById('marketChart').getContext('2d');
-        if (chart) chart.destroy();
-        
-        // Se não houver histórico, cria um ponto inicial
-        if (state.history.length === 0) {
-            state.history.push({ time: new Date().toLocaleTimeString(), priceYes: 50 });
-        }
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(33, 82, 255, 0.2)');
+        gradient.addColorStop(1, 'rgba(33, 82, 255, 0)');
 
-        chart = new Chart(ctx, {
+        marketChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: state.history.map(h => h.time),
                 datasets: [{
-                    label: 'Preço SIM (¢)',
-                    data: state.history.map(h => h.priceYes),
-                    borderColor: '#00c853',
-                    borderWidth: 2,
-                    tension: 0.1,
-                    pointRadius: 0
+                    label: 'Preço SIM',
+                    data: state.chartData,
+                    borderColor: '#2152ff',
+                    borderWidth: 3,
+                    fill: true,
+                    backgroundColor: gradient,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#fff'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: { 
-                    y: { min: 0, max: 100, grid: { color: '#2b2f36' }, ticks: { color: '#8b94a3' } }, 
-                    x: { display: false } 
+                scales: {
+                    x: { type: 'linear', display: false },
+                    y: { 
+                        position: 'right',
+                        min: 0, max: 100,
+                        grid: { color: '#1c1e22' },
+                        ticks: { callback: v => v + '¢', color: '#94a3b8' }
+                    }
                 },
-                plugins: { legend: { display: false } },
-                interaction: { mode: 'index', intersect: false }
+                plugins: { legend: { display: false } }
             }
         });
     }
 
     function updateChart() {
-        const prices = getPrices();
-        chart.data.labels.push(new Date().toLocaleTimeString());
-        chart.data.datasets[0].data.push(prices.yes * 100);
-        chart.update();
+        marketChart.data.datasets[0].data = state.chartData;
+        marketChart.update();
     }
 
-    window.onload = () => {
-        showProfileModal();
-        initChart();
-        renderChat();
+    // --- AUTH ---
+    function renderUserSelector() {
+        const container = document.getElementById('user-selector');
+        container.innerHTML = USERS.map(u => `
+            <button class="btn btn-outline-light py-2" onclick="login('${u}')">${u}</button>
+        `).join('');
+    }
+
+    function login(user) {
+        currentUser = user;
+        bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
         updateUI();
-    };
+        addSystemMessage(`${user} entrou no mercado.`);
+    }
+
+    function openLoginModal() {
+        new bootstrap.Modal(document.getElementById('loginModal')).show();
+    }
+
+    function save() { localStorage.setItem('pilaMarket_v3', JSON.stringify(state)); }
+
+    window.onload = init;
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
