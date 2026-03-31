@@ -8,21 +8,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
         :root {
             --primary: #007bff;
+            --bg-dark: #0a1128;
+            --card-bg: #112233;
+            --border-color: #1e2a44;
         }
         
         body {
-            background: #0a1128;
+            background: var(--bg-dark);
             color: #f0f4f8;
             font-family: 'Inter', system-ui, sans-serif;
         }
         
         .navbar {
-            background: #0a1128;
-            border-bottom: 1px solid #1e2a44;
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
@@ -37,27 +40,35 @@
         }
         
         .nav-link:hover {
-            color: #007bff !important;
+            color: var(--primary) !important;
         }
         
         .market-card {
-            background: #112233;
+            background: var(--card-bg);
             border-radius: 12px;
-            border: 1px solid #1e2a44;
+            border: 1px solid var(--border-color);
         }
         
         .yes-btn {
             background: #28a745;
             color: #fff;
             font-weight: 700;
-            border: none;
+            border: 3px solid transparent;
+            transition: all 0.2s;
         }
         
         .no-btn {
             background: #dc3545;
             color: #fff;
             font-weight: 700;
-            border: none;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .yes-btn.selected, .no-btn.selected {
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+            transform: scale(1.02);
         }
         
         .chance-badge {
@@ -83,12 +94,17 @@
         }
         
         .modal-content {
-            background: #112233;
-            border: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: white;
+        }
+
+        .modal-header, .modal-footer {
+            border-color: var(--border-color);
         }
         
         .balance-pill {
-            background: #1e2a44;
+            background: var(--border-color);
             border-radius: 50px;
             padding: 8px 20px;
             font-weight: 600;
@@ -97,16 +113,15 @@
 </head>
 <body>
 
-    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                <img src="imagem_2026-03-31_210630932.png" alt="PilaMarket Logo" class="logo-img">
+                <img src="imagem_2026-03-31_210630932.png" alt="PilaMarket Logo" class="logo-img" onerror="this.style.display='none'">
                 <span class="fs-3 fw-bold text-white">PilaMarket</span>
             </a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
             </button>
             
             <div class="collapse navbar-collapse" id="navMenu">
@@ -116,8 +131,6 @@
                     <li class="nav-item"><a class="nav-link" href="#">Novo</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Política</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Esportes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Finanças</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Cripto</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Geopolítica</a></li>
                 </ul>
                 
@@ -131,7 +144,7 @@
                     </button>
                     
                     <div class="balance-pill d-flex align-items-center gap-2">
-                        <span id="userBalanceDisplay">$100</span>
+                        <span id="userBalanceDisplay">Saldo: $100</span>
                         <span class="text-muted">USDC</span>
                     </div>
                 </div>
@@ -142,7 +155,6 @@
     <div class="container-fluid px-4 py-4">
         <div class="row g-4">
             
-            <!-- COLUNA PRINCIPAL -->
             <div class="col-lg-8">
                 
                 <div class="d-flex align-items-center gap-3 mb-3">
@@ -153,7 +165,6 @@
                     </div>
                 </div>
                 
-                <!-- CHANCES -->
                 <div class="d-flex align-items-center gap-4 mb-4">
                     <div>
                         <span class="chance-badge" id="yesChance">84% CHANCE</span>
@@ -166,14 +177,12 @@
                     </div>
                 </div>
                 
-                <!-- GRÁFICO PROFISSIONAL -->
                 <div class="market-card p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">Evolução da probabilidade (últimos 7 dias)</h5>
-                        <select class="form-select form-select-sm w-auto" onchange="updateChart(this.value)">
-                            <option value="7" selected>7 dias</option>
-                            <option value="30">30 dias</option>
-                            <option value="1">24 horas</option>
+                        <h5 class="mb-0">Evolução da probabilidade</h5>
+                        <select class="form-select form-select-sm w-auto text-white bg-dark border-secondary" onchange="updateChart(this.value)">
+                            <option value="7" selected>Últimos 7 dias</option>
+                            <option value="30">Últimos 30 dias</option>
                         </select>
                     </div>
                     <div class="graph-container">
@@ -181,18 +190,17 @@
                     </div>
                 </div>
                 
-                <!-- PAINEL DE APOSTA (aparece após login) -->
                 <div id="betPanel" class="market-card p-4 d-none">
                     <h5 class="mb-3">Faça sua aposta</h5>
                     
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <button onclick="placeBet(true)" class="btn yes-btn w-100 py-4 fs-4 rounded-3">
+                            <button id="btnSim" onclick="selectSide('SIM')" class="btn yes-btn w-100 py-4 fs-4 rounded-3">
                                 SIM • <span id="yesPriceLive">84,2¢</span>
                             </button>
                         </div>
                         <div class="col-md-6">
-                            <button onclick="placeBet(false)" class="btn no-btn w-100 py-4 fs-4 rounded-3">
+                            <button id="btnNao" onclick="selectSide('NÃO')" class="btn no-btn w-100 py-4 fs-4 rounded-3">
                                 NÃO • <span id="noPriceLive">15,8¢</span>
                             </button>
                         </div>
@@ -201,52 +209,47 @@
                     <div class="mt-4">
                         <label class="form-label">Valor da aposta (USDC)</label>
                         <div class="input-group">
-                            <input type="number" id="betAmount" class="form-control form-control-lg" value="20" style="background:#1e2a44; border-color:#007bff;">
+                            <input type="number" id="betAmount" class="form-control form-control-lg text-white" value="20" style="background:#1e2a44; border-color:#007bff;">
                             <button class="btn btn-outline-primary" onclick="quickAmount(10)">+10</button>
                             <button class="btn btn-outline-primary" onclick="quickAmount(20)">+20</button>
                             <button class="btn btn-outline-primary" onclick="quickAmount(50)">+50</button>
-                            <button class="btn btn-outline-primary" onclick="quickAmount(100)">MÁX</button>
+                            <button class="btn btn-outline-primary fw-bold" onclick="quickAmount('MAX')">MÁX</button>
                         </div>
                     </div>
                     
                     <div class="d-flex justify-content-between mt-4 align-items-center">
-                        <div class="fw-bold">Saldo atual: <span id="currentUserBalanceDisplay">$100</span></div>
-                        <button onclick="confirmBet()" class="btn btn-primary px-5 py-3">Confirmar Aposta</button>
+                        <div class="fw-bold">Saldo atual: <span id="currentUserBalanceDisplay" class="text-primary">$100</span></div>
+                        <button onclick="confirmBet()" class="btn btn-primary px-5 py-3 fw-bold rounded-pill">Confirmar Aposta</button>
                     </div>
                 </div>
                 
-                <!-- Tela de bloqueio antes do login -->
                 <div id="betLocked" class="market-card p-5 text-center">
                     <h4>Escolha seu perfil para começar a apostar</h4>
-                    <button onclick="showProfileModal()" class="btn btn-primary px-5 py-3 mt-3">Escolher Perfil</button>
+                    <button onclick="showProfileModal()" class="btn btn-primary px-5 py-3 mt-3 rounded-pill fw-bold">Escolher Perfil</button>
                 </div>
             </div>
             
-            <!-- SIDEBAR -->
             <div class="col-lg-4">
                 
-                <!-- Usuários e saldos -->
                 <div class="market-card p-4 mb-4">
                     <h5 class="mb-3">👥 Participantes Ativos</h5>
-                    <div id="usersList" class="d-flex flex-column gap-3"></div>
+                    <div id="usersList" class="d-flex flex-column gap-2"></div>
                 </div>
                 
-                <!-- Painel Admin (só aparece para admin) -->
-                <div id="adminPanel" class="market-card p-4 d-none">
+                <div id="adminPanel" class="market-card p-4 mb-4 d-none border-primary">
                     <h5 class="mb-3 text-primary">🔑 Painel do Administrador</h5>
-                    <p class="text-muted">Quando o evento terminar, resolva o mercado:</p>
+                    <p class="text-muted small">Quando o evento terminar, decida o resultado final para distribuir os fundos:</p>
                     
-                    <div class="d-flex gap-2 mb-3">
-                        <button onclick="resolveMarket(true)" class="btn btn-success flex-fill py-3">SIM (aconteceu)</button>
-                        <button onclick="resolveMarket(false)" class="btn btn-danger flex-fill py-3">NÃO (não aconteceu)</button>
+                    <div class="d-flex flex-column gap-2 mb-3">
+                        <button onclick="resolveMarket('SIM')" class="btn btn-success py-3 fw-bold">SIM (Aconteceu)</button>
+                        <button onclick="resolveMarket('NÃO')" class="btn btn-danger py-3 fw-bold">NÃO (Não Aconteceu)</button>
                     </div>
                     
-                    <div class="alert alert-info">
-                        Os saldos dos usuários serão atualizados automaticamente.
+                    <div class="alert alert-info py-2 small mb-0">
+                        Os saldos de Sá, Pedro e Silva serão atualizados automaticamente com base nas apostas.
                     </div>
                 </div>
                 
-                <!-- Histórico -->
                 <div class="market-card p-4">
                     <h5 class="mb-3">📜 Histórico de Apostas</h5>
                     <div id="historyList" class="small"></div>
@@ -255,33 +258,32 @@
         </div>
     </div>
 
-    <!-- MODAL ESCOLHA DE PERFIL -->
     <div class="modal fade" id="profileModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">Escolha seu perfil no PilaMarket</h5>
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Entrar no PilaMarket</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body py-4">
                     <div class="row g-3">
                         <div class="col-6">
-                            <button onclick="selectProfile('Sá')" class="btn btn-outline-light w-100 py-4 profile-btn">
+                            <button onclick="selectProfile('Sá')" class="btn btn-outline-light w-100 py-4 profile-btn fs-5">
                                 <strong>Sá</strong>
                             </button>
                         </div>
                         <div class="col-6">
-                            <button onclick="selectProfile('Pedro')" class="btn btn-outline-light w-100 py-4 profile-btn">
+                            <button onclick="selectProfile('Pedro')" class="btn btn-outline-light w-100 py-4 profile-btn fs-5">
                                 <strong>Pedro</strong>
                             </button>
                         </div>
                         <div class="col-6">
-                            <button onclick="selectProfile('Silva')" class="btn btn-outline-light w-100 py-4 profile-btn">
+                            <button onclick="selectProfile('Silva')" class="btn btn-outline-light w-100 py-4 profile-btn fs-5">
                                 <strong>Silva</strong>
                             </button>
                         </div>
                         <div class="col-6">
-                            <button onclick="selectProfile('Admin')" class="btn btn-outline-light w-100 py-4 profile-btn">
+                            <button onclick="selectProfile('Admin')" class="btn btn-outline-primary w-100 py-4 profile-btn fs-5">
                                 <strong>Admin</strong>
                             </button>
                         </div>
@@ -291,7 +293,6 @@
         </div>
     </div>
 
-    <!-- MODAL PASSWORD (apenas para Admin) -->
     <div class="modal fade" id="passwordModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -301,12 +302,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Senha</label>
-                        <input id="adminPassword" type="password" class="form-control form-control-lg" placeholder="Digite a senha">
+                        <label class="form-label">Senha de Admin</label>
+                        <input id="adminPassword" type="password" class="form-control form-control-lg bg-dark text-white border-secondary" placeholder="Digite a senha">
                     </div>
                 </div>
-                <div class="modal-footer border-0">
-                    <button onclick="checkAdminPassword()" class="btn btn-primary w-100 py-3">Entrar como Admin</button>
+                <div class="modal-footer border-0 pt-0">
+                    <button onclick="checkAdminPassword()" class="btn btn-primary w-100 py-3 fw-bold rounded-3">Entrar como Admin</button>
                 </div>
             </div>
         </div>
@@ -322,14 +323,14 @@
         
         let currentUser = null;
         let isAdmin = false;
-        
+        let selectedSide = null; // Guarda se clicou em SIM ou NÃO
         let history = [];
         
+        // Dados do gráfico
         let chartData = {
             labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
             values: [62, 68, 75, 71, 78, 82, 84]
         };
-        
         let probabilityChart;
         
         // ==================== INICIALIZAÇÃO ====================
@@ -350,9 +351,11 @@
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { min: 50, max: 100, grid: { color: "#1e2a44" }, ticks: { color: "#aaa", callback: v => v + "%" } },
+                        y: { min: 40, max: 100, grid: { color: "#1e2a44" }, ticks: { color: "#aaa", callback: v => v + "%" } },
                         x: { grid: { color: "#1e2a44" }, ticks: { color: "#aaa" } }
                     }
                 }
@@ -360,10 +363,13 @@
         }
         
         function updateChart(days) {
-            if (days === "30") chartData.values = [51, 55, 59, 64, 70, 76, 84];
-            else if (days === "1") chartData.values = [80, 79, 82, 83, 81, 84, 84];
-            else chartData.values = [62, 68, 75, 71, 78, 82, 84];
-            probabilityChart.data.datasets[0].data = chartData.values;
+            if (days === "30") {
+                probabilityChart.data.labels = ["Sem 1", "Sem 2", "Sem 3", "Sem 4"];
+                probabilityChart.data.datasets[0].data = [51, 64, 76, 84];
+            } else {
+                probabilityChart.data.labels = chartData.labels;
+                probabilityChart.data.datasets[0].data = chartData.values;
+            }
             probabilityChart.update();
         }
         
@@ -372,14 +378,22 @@
             container.innerHTML = "";
             Object.keys(users).forEach(name => {
                 const u = users[name];
+                
+                // Cor da posição
+                let posColor = "text-muted";
+                if (u.position.includes("SIM")) posColor = "text-success";
+                if (u.position.includes("NÃO")) posColor = "text-danger";
+
                 const div = document.createElement("div");
-                div.className = "d-flex justify-content-between align-items-center p-3 border-bottom";
+                div.className = "d-flex justify-content-between align-items-center p-3 rounded bg-dark border border-secondary mb-2";
                 div.innerHTML = `
-                    <div><strong>${name}</strong></div>
+                    <div>
+                        <div class="fs-5 fw-bold">${name}</div>
+                        <div class="small ${posColor} fw-semibold">${u.position}</div>
+                    </div>
                     <div class="text-end">
-                        <div class="small text-muted">Saldo</div>
-                        <strong>$${u.balance}</strong>
-                        <div class="small text-muted">${u.position}</div>
+                        <div class="small text-muted mb-1">Saldo</div>
+                        <div class="fs-5 text-white fw-bold">$${u.balance.toFixed(2)}</div>
                     </div>
                 `;
                 container.appendChild(div);
@@ -390,16 +404,22 @@
             const container = document.getElementById("historyList");
             container.innerHTML = "";
             if (history.length === 0) {
-                container.innerHTML = `<p class="text-muted text-center py-4">Nenhuma aposta ainda</p>`;
+                container.innerHTML = `<p class="text-muted text-center py-4">Nenhuma aposta registada</p>`;
                 return;
             }
             history.forEach(item => {
                 const div = document.createElement("div");
-                div.className = "d-flex justify-content-between py-3 border-bottom";
+                div.className = "d-flex justify-content-between align-items-center py-2 border-bottom border-secondary";
+                
+                const badgeColor = item.side === "SIM" ? "bg-success" : "bg-danger";
+                
                 div.innerHTML = `
-                    <div><strong>${item.user}</strong> apostou <strong>${item.side}</strong></div>
-                    <div class="text-end">
-                        <span class="text-success">$${item.amount}</span>
+                    <div>
+                        <strong class="text-white">${item.user}</strong> apostou 
+                        <span class="badge ${badgeColor} ms-1">${item.side}</span>
+                    </div>
+                    <div class="fw-bold text-white">
+                        $${item.amount.toFixed(2)}
                     </div>
                 `;
                 container.appendChild(div);
@@ -416,12 +436,13 @@
             bootstrap.Modal.getInstance(document.getElementById("profileModal")).hide();
             
             if (profile === "Admin") {
+                document.getElementById("adminPassword").value = "";
                 const pwModal = new bootstrap.Modal(document.getElementById("passwordModal"));
                 pwModal.show();
                 return;
             }
             
-            // Login como usuário normal
+            // Login normal
             currentUser = profile;
             isAdmin = false;
             finishLogin();
@@ -435,95 +456,140 @@
                 isAdmin = true;
                 finishLogin();
             } else {
-                alert("❌ Senha incorreta! (Dica: 1234)");
+                alert("Senha incorreta!");
             }
         }
         
         function finishLogin() {
+            // UI do Topo
             document.getElementById("loginBtn").classList.add("d-none");
             document.getElementById("loginStatus").classList.remove("d-none");
             document.getElementById("currentUserDisplay").textContent = currentUser;
             
-            // Atualiza saldo
-            document.getElementById("userBalanceDisplay").textContent = `$${users[currentUser] ? users[currentUser].balance : "100"}`;
-            
-            // Mostra painel de aposta
-            document.getElementById("betLocked").classList.add("d-none");
-            document.getElementById("betPanel").classList.remove("d-none");
-            
-            // Mostra painel admin se for admin
+            // Lida com o painel central dependendo se é admin ou user
             if (isAdmin) {
+                document.getElementById("betLocked").classList.add("d-none");
+                document.getElementById("betPanel").classList.add("d-none");
                 document.getElementById("adminPanel").classList.remove("d-none");
+                document.getElementById("userBalanceDisplay").textContent = "N/A";
+                alert("🔒 Conectado como Admin!");
+            } else {
+                document.getElementById("betLocked").classList.add("d-none");
+                document.getElementById("betPanel").classList.remove("d-none");
+                document.getElementById("adminPanel").classList.add("d-none");
+                
+                updateBalancesUI();
+                alert(`✅ Bem-vindo(a), ${currentUser}! Todos começam com $100.`);
             }
             
-            // Atualiza saldo no painel
-            if (users[currentUser]) {
-                document.getElementById("currentUserBalanceDisplay").textContent = `$${users[currentUser].balance}`;
-            }
-            
-            alert(`✅ Bem-vindo(a), ${currentUser}!`);
             renderUsersList();
             renderHistory();
         }
         
+        function updateBalancesUI() {
+            if(!isAdmin && currentUser) {
+                document.getElementById("userBalanceDisplay").textContent = `Saldo: $${users[currentUser].balance.toFixed(2)}`;
+                document.getElementById("currentUserBalanceDisplay").textContent = `$${users[currentUser].balance.toFixed(2)}`;
+            }
+        }
+
         // ==================== APOSTAS ====================
-        function placeBet(isYes) {
-            if (!currentUser) return;
-            alert(`✅ Você escolheu ${isYes ? "SIM" : "NÃO"}`);
-        }
-        
-        function confirmBet() {
-            if (!currentUser || !users[currentUser]) return;
+        function selectSide(side) {
+            selectedSide = side;
             
-            const amount = parseFloat(document.getElementById("betAmount").value) || 20;
-            if (amount > users[currentUser].balance) {
-                alert("Saldo insuficiente!");
-                return;
+            // Atualiza visual dos botões
+            const btnSim = document.getElementById("btnSim");
+            const btnNao = document.getElementById("btnNao");
+            
+            if (side === "SIM") {
+                btnSim.classList.add("selected");
+                btnNao.classList.remove("selected");
+            } else {
+                btnNao.classList.add("selected");
+                btnSim.classList.remove("selected");
             }
-            
-            users[currentUser].balance -= amount;
-            const side = Math.random() > 0.5 ? "SIM" : "NÃO";
-            
-            history.unshift({
-                user: currentUser,
-                side: side,
-                amount: amount
-            });
-            
-            document.getElementById("currentUserBalanceDisplay").textContent = `$${users[currentUser].balance}`;
-            document.getElementById("userBalanceDisplay").textContent = `$${users[currentUser].balance}`;
-            
-            renderUsersList();
-            renderHistory();
-            
-            alert(`🎟️ Aposta de $${amount} (${side}) registrada com sucesso!`);
         }
         
         function quickAmount(val) {
-            document.getElementById("betAmount").value = val;
+            const input = document.getElementById("betAmount");
+            if (val === 'MAX') {
+                input.value = users[currentUser].balance;
+            } else {
+                let current = parseFloat(input.value) || 0;
+                input.value = current + val;
+            }
+        }
+
+        function confirmBet() {
+            if (!selectedSide) {
+                alert("⚠️ Por favor, seleciona SIM ou NÃO antes de confirmar a aposta.");
+                return;
+            }
+            
+            const amount = parseFloat(document.getElementById("betAmount").value);
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert("⚠️ Insere um valor válido.");
+                return;
+            }
+            
+            if (amount > users[currentUser].balance) {
+                alert("❌ Saldo insuficiente!");
+                return;
+            }
+            
+            // Processa aposta
+            users[currentUser].balance -= amount;
+            users[currentUser].position = `Apostou em ${selectedSide}`;
+            
+            // Regista Histórico
+            history.unshift({
+                user: currentUser,
+                side: selectedSide,
+                amount: amount
+            });
+            
+            // Limpa seleções visuais para a próxima aposta
+            selectedSide = null;
+            document.getElementById("btnSim").classList.remove("selected");
+            document.getElementById("btnNao").classList.remove("selected");
+            document.getElementById("betAmount").value = "20"; // Reset para 20
+            
+            // Atualiza ecrã
+            updateBalancesUI();
+            renderUsersList();
+            renderHistory();
+            
+            alert(`🎟️ Aposta confirmada! ${currentUser} apostou ${amount} USDC em ${history[0].side}.`);
         }
         
         // ==================== RESOLVER MERCADO (ADMIN) ====================
-        function resolveMarket(result) {
-            const msg = result 
-                ? "✅ Mercado resolvido como SIM. Pagamentos automáticos feitos!"
-                : "❌ Mercado resolvido como NÃO. Pagamentos automáticos feitos!";
+        function resolveMarket(winningSide) {
+            if(!confirm(`Tens a certeza que queres resolver o mercado como ${winningSide}? Esta ação vai distribuir os fundos.`)) return;
+
+            // Simulação simples de distribuição: Quem acertou ganha proporcional (exemplo básico)
+            // Na realidade, num mercado P2P o lucro vem das perdas dos outros.
+            // Para simplificar: quem acerta recebe o dobro, quem erra perde (o dinheiro já foi descontado no momento da aposta).
             
-            alert(msg);
-            
-            // Simula distribuição simples
-            if (result) {
-                users["Sá"].balance += 45;
-                users["Silva"].balance += 30;
-                users["Pedro"].balance -= 25;
-            } else {
-                users["Pedro"].balance += 60;
-                users["Sá"].balance -= 20;
-                users["Silva"].balance -= 15;
-            }
+            let payoutCount = 0;
+
+            Object.keys(users).forEach(name => {
+                if (users[name].position === `Apostou em ${winningSide}`) {
+                    // Reembolsa o que gastou e dá lucro (exemplo simples fixo para o mockup)
+                    users[name].balance += 50; 
+                    users[name].position = "Venceu!";
+                    payoutCount++;
+                } else if (users[name].position.includes("Apostou em")) {
+                    users[name].position = "Perdeu";
+                }
+            });
             
             renderUsersList();
-            renderHistory();
+            alert(`✅ Mercado resolvido como ${winningSide}! ${payoutCount} vencedor(es) foram pagos.`);
+            
+            // Bloqueia novas apostas (simulação de mercado fechado)
+            document.getElementById("betPanel").classList.add("opacity-50");
+            document.getElementById("betPanel").style.pointerEvents = "none";
         }
         
         // ==================== INICIALIZAÇÃO DA PÁGINA ====================
@@ -531,7 +597,6 @@
             initChart();
             renderUsersList();
             renderHistory();
-            console.log("%c✅ PilaMarket carregado com sucesso (versão profissional limpa)", "color:#007bff; font-size:13px");
         };
     </script>
 </body>
