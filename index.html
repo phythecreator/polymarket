@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeoPredict • Apostas no Futuro</title>
-    <!-- Bootstrap + Tailwind-like + Chart.js -->
+    <title>PilaMarket • Apostas no Futuro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -12,111 +11,98 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap');
         
         :root {
-            --neon-cyan: #00f0ff;
-            --neon-green: #00ff9d;
+            --primary: #007bff;
         }
         
         body {
-            background: #0a0f1c;
-            color: #e0f0ff;
+            background: #0a1128;
+            color: #f0f4f8;
             font-family: 'Inter', system-ui, sans-serif;
         }
         
         .navbar {
-            background: rgba(10, 15, 28, 0.95) !important;
-            backdrop-filter: blur(12px);
+            background: #0a1128;
             border-bottom: 1px solid #1e2a44;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .logo-img {
+            height: 42px;
+            width: auto;
         }
         
         .nav-link {
-            color: #e0f0ff !important;
-            transition: all 0.2s;
+            color: #f0f4f8 !important;
+            font-weight: 500;
         }
         
         .nav-link:hover {
-            color: var(--neon-cyan) !important;
-            text-shadow: 0 0 8px var(--neon-cyan);
-        }
-        
-        .logo {
-            font-size: 1.6rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #00f0ff, #00ff9d);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px var(--neon-cyan);
+            color: #007bff !important;
         }
         
         .market-card {
-            background: #112133;
-            border-radius: 16px;
+            background: #112233;
+            border-radius: 12px;
             border: 1px solid #1e2a44;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
         }
         
         .yes-btn {
-            background: #00ff9d;
-            color: #000;
-            font-weight: 700;
-            border: none;
-            box-shadow: 0 0 15px #00ff9d;
-        }
-        
-        .no-btn {
-            background: #ff3366;
+            background: #28a745;
             color: #fff;
             font-weight: 700;
             border: none;
-            box-shadow: 0 0 15px #ff3366;
+        }
+        
+        .no-btn {
+            background: #dc3545;
+            color: #fff;
+            font-weight: 700;
+            border: none;
         }
         
         .chance-badge {
-            background: rgba(0, 255, 157, 0.15);
-            color: #00ff9d;
-            padding: 4px 12px;
-            border-radius: 9999px;
+            background: #28a745;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 50px;
             font-size: 1.1rem;
-            font-weight: 700;
+            font-weight: 600;
         }
         
         .graph-container {
-            height: 320px;
+            height: 340px;
         }
         
-        .neon-text {
-            text-shadow: 0 0 12px var(--neon-cyan);
+        .profile-btn {
+            transition: all 0.2s;
         }
         
-        .user-pill {
-            background: #1e2a44;
-            border-radius: 50px;
-            padding: 6px 16px;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-        
-        .user-pill.active {
-            background: #00f0ff;
-            color: #000;
-            box-shadow: 0 0 15px #00f0ff;
+        .profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
         }
         
         .modal-content {
-            background: #112133;
-            border: 2px solid var(--neon-cyan);
+            background: #112233;
+            border: none;
+        }
+        
+        .balance-pill {
+            background: #1e2a44;
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR EXATAMENTE como Polymarket -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                <div class="d-flex align-items-center justify-content-center bg-primary rounded-3" style="width: 42px; height: 42px;">
-                    <span style="font-size: 1.8rem; line-height: 1;">🔮</span>
-                </div>
-                <span class="logo">NeoPredict</span>
+                <img src="imagem_2026-03-31_210630932.png" alt="PilaMarket Logo" class="logo-img">
+                <span class="fs-3 fw-bold text-white">PilaMarket</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -133,24 +119,20 @@
                     <li class="nav-item"><a class="nav-link" href="#">Finanças</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Cripto</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Geopolítica</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Mais</a></li>
                 </ul>
                 
                 <div class="d-flex align-items-center gap-3">
-                    <!-- Status do login -->
                     <div id="loginStatus" class="d-none align-items-center gap-2">
-                        <span class="badge bg-success px-3 py-2">Conectado como <strong id="currentUserDisplay">Admin</strong></span>
+                        <span class="badge bg-primary px-3 py-2 fs-6">Conectado como <strong id="currentUserDisplay"></strong></span>
                     </div>
                     
-                    <button onclick="showLoginModal()" id="loginBtn" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold">
-                        Entrar
+                    <button onclick="showProfileModal()" id="loginBtn" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold">
+                        Escolher Perfil
                     </button>
                     
-                    <div class="dropdown">
-                        <button class="btn btn-light rounded-pill d-flex align-items-center gap-2" data-bs-toggle="dropdown">
-                            <span class="fw-bold">$1.234</span>
-                            <span class="text-muted">USDC</span>
-                        </button>
+                    <div class="balance-pill d-flex align-items-center gap-2">
+                        <span id="userBalanceDisplay">$100</span>
+                        <span class="text-muted">USDC</span>
                     </div>
                 </div>
             </div>
@@ -160,39 +142,37 @@
     <div class="container-fluid px-4 py-4">
         <div class="row g-4">
             
-            <!-- LEFT COLUMN - Mercado principal -->
+            <!-- COLUNA PRINCIPAL -->
             <div class="col-lg-8">
                 
-                <!-- Título do mercado -->
                 <div class="d-flex align-items-center gap-3 mb-3">
                     <div class="bg-primary text-white px-3 py-1 rounded-3 fw-bold">EVENTO FUTURO</div>
-                    <h1 id="marketTitle" class="h2 mb-0 neon-text">O Brasil vai sediar a Copa do Mundo de 2030?</h1>
-                    <div class="ms-auto d-flex align-items-center gap-2">
-                        <span class="text-muted">$2.847.391 Vol.</span>
-                        <span class="text-success fw-bold">↑ 42%</span>
+                    <h1 id="marketTitle" class="h2 mb-0">O Brasil vai sediar a Copa do Mundo de 2030?</h1>
+                    <div class="ms-auto d-flex align-items-center gap-2 text-muted">
+                        $3.247.891 Vol. • <span class="text-success">↑ 38%</span>
                     </div>
                 </div>
                 
-                <!-- Chance atual -->
+                <!-- CHANCES -->
                 <div class="d-flex align-items-center gap-4 mb-4">
                     <div>
-                        <span class="chance-badge" id="yesChance">87% CHANCE</span>
-                        <span class="ms-3 text-success fw-bold" id="yesPrice">Sim • 87,4¢</span>
+                        <span class="chance-badge" id="yesChance">84% CHANCE</span>
+                        <span class="ms-3 text-success fw-bold" id="yesPrice">Sim • 84,2¢</span>
                     </div>
                     <div class="flex-grow-1"></div>
                     <div class="text-end">
-                        <span class="chance-badge bg-danger bg-opacity-10 text-danger" id="noChance">13% CHANCE</span>
-                        <span class="ms-3 text-danger fw-bold" id="noPrice">Não • 12,6¢</span>
+                        <span class="chance-badge bg-danger" id="noChance">16% CHANCE</span>
+                        <span class="ms-3 text-danger fw-bold" id="noPrice">Não • 15,8¢</span>
                     </div>
                 </div>
                 
-                <!-- GRÁFICO (exatamente como na imagem) -->
+                <!-- GRÁFICO PROFISSIONAL -->
                 <div class="market-card p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">Evolução da probabilidade</h5>
+                        <h5 class="mb-0">Evolução da probabilidade (últimos 7 dias)</h5>
                         <select class="form-select form-select-sm w-auto" onchange="updateChart(this.value)">
-                            <option value="30">30 dias</option>
                             <option value="7" selected>7 dias</option>
+                            <option value="30">30 dias</option>
                             <option value="1">24 horas</option>
                         </select>
                     </div>
@@ -201,349 +181,358 @@
                     </div>
                 </div>
                 
-                <!-- Interface de aposta (só aparece após login) -->
+                <!-- PAINEL DE APOSTA (aparece após login) -->
                 <div id="betPanel" class="market-card p-4 d-none">
-                    <h5 class="mb-3">Escolha o usuário e aposte</h5>
-                    
-                    <!-- Seletor de usuários -->
-                    <div class="d-flex gap-2 mb-4" id="userSelector">
-                        <!-- JS preenche -->
-                    </div>
+                    <h5 class="mb-3">Faça sua aposta</h5>
                     
                     <div class="row g-3">
                         <div class="col-md-6">
                             <button onclick="placeBet(true)" class="btn yes-btn w-100 py-4 fs-4 rounded-3">
-                                SIM • <span id="yesPriceLive">87,4¢</span>
+                                SIM • <span id="yesPriceLive">84,2¢</span>
                             </button>
                         </div>
                         <div class="col-md-6">
                             <button onclick="placeBet(false)" class="btn no-btn w-100 py-4 fs-4 rounded-3">
-                                NÃO • <span id="noPriceLive">12,6¢</span>
+                                NÃO • <span id="noPriceLive">15,8¢</span>
                             </button>
                         </div>
                     </div>
                     
                     <div class="mt-4">
-                        <label class="form-label">Quantia (USDC)</label>
+                        <label class="form-label">Valor da aposta (USDC)</label>
                         <div class="input-group">
-                            <input type="number" id="betAmount" class="form-control form-control-lg bg-dark text-white" value="50" style="border-color: #00f0ff;">
-                            <button class="btn btn-outline-light" onclick="quickAmount(50)">+50</button>
-                            <button class="btn btn-outline-light" onclick="quickAmount(100)">+100</button>
-                            <button class="btn btn-outline-light" onclick="quickAmount(250)">+250</button>
-                            <button class="btn btn-outline-light" onclick="quickAmount(500)">MÁX</button>
+                            <input type="number" id="betAmount" class="form-control form-control-lg" value="20" style="background:#1e2a44; border-color:#007bff;">
+                            <button class="btn btn-outline-primary" onclick="quickAmount(10)">+10</button>
+                            <button class="btn btn-outline-primary" onclick="quickAmount(20)">+20</button>
+                            <button class="btn btn-outline-primary" onclick="quickAmount(50)">+50</button>
+                            <button class="btn btn-outline-primary" onclick="quickAmount(100)">MÁX</button>
                         </div>
                     </div>
                     
-                    <div class="d-flex justify-content-between mt-4">
-                        <div>Saldo de <strong id="currentUserBalance">Sá • $1.240</strong></div>
-                        <button onclick="confirmBet()" class="btn btn-primary px-5">Confirmar Aposta</button>
+                    <div class="d-flex justify-content-between mt-4 align-items-center">
+                        <div class="fw-bold">Saldo atual: <span id="currentUserBalanceDisplay">$100</span></div>
+                        <button onclick="confirmBet()" class="btn btn-primary px-5 py-3">Confirmar Aposta</button>
                     </div>
                 </div>
                 
-                <!-- Botão de login para apostar (antes do login) -->
+                <!-- Tela de bloqueio antes do login -->
                 <div id="betLocked" class="market-card p-5 text-center">
-                    <h4 class="mb-3">Para apostar é necessário login</h4>
-                    <p class="text-muted mb-4">Username: <strong>admin</strong> • Password: <strong>1234</strong></p>
-                    <button onclick="showLoginModal()" class="btn btn-light px-5 py-3 fs-5">Entrar e Apostar</button>
+                    <h4>Escolha seu perfil para começar a apostar</h4>
+                    <button onclick="showProfileModal()" class="btn btn-primary px-5 py-3 mt-3">Escolher Perfil</button>
                 </div>
             </div>
             
-            <!-- RIGHT COLUMN - Sidebar -->
+            <!-- SIDEBAR -->
             <div class="col-lg-4">
                 
-                <!-- Usuários ativos -->
+                <!-- Usuários e saldos -->
                 <div class="market-card p-4 mb-4">
-                    <h5 class="mb-3">👥 Usuários Ativos</h5>
-                    <div id="usersList" class="d-flex flex-column gap-3">
-                        <!-- JS preenche -->
-                    </div>
+                    <h5 class="mb-3">👥 Participantes Ativos</h5>
+                    <div id="usersList" class="d-flex flex-column gap-3"></div>
                 </div>
                 
-                <!-- Painel ADMIN (aparece após login) -->
+                <!-- Painel Admin (só aparece para admin) -->
                 <div id="adminPanel" class="market-card p-4 d-none">
-                    <h5 class="mb-3 text-warning">🔑 Painel do Admin</h5>
-                    <p class="text-muted small">Resolva o mercado quando o evento terminar</p>
+                    <h5 class="mb-3 text-primary">🔑 Painel do Administrador</h5>
+                    <p class="text-muted">Quando o evento terminar, resolva o mercado:</p>
                     
-                    <div class="mb-3">
-                        <label class="form-label">Resultado final</label>
-                        <div class="d-flex gap-2">
-                            <button onclick="resolveMarket(true)" class="btn btn-success flex-fill">SIM (aconteceu)</button>
-                            <button onclick="resolveMarket(false)" class="btn btn-danger flex-fill">NÃO (não aconteceu)</button>
-                        </div>
+                    <div class="d-flex gap-2 mb-3">
+                        <button onclick="resolveMarket(true)" class="btn btn-success flex-fill py-3">SIM (aconteceu)</button>
+                        <button onclick="resolveMarket(false)" class="btn btn-danger flex-fill py-3">NÃO (não aconteceu)</button>
                     </div>
                     
-                    <div class="alert alert-info small">
-                        Após resolução, os saldos de Sá, Pedro e Silva são atualizados automaticamente.
+                    <div class="alert alert-info">
+                        Os saldos dos usuários serão atualizados automaticamente.
                     </div>
                 </div>
                 
-                <!-- Histórico de apostas dos 3 usuários -->
+                <!-- Histórico -->
                 <div class="market-card p-4">
-                    <h5 class="mb-3">📜 Histórico dos Usuários</h5>
-                    <div id="historyList" class="small">
-                        <!-- JS preenche -->
+                    <h5 class="mb-3">📜 Histórico de Apostas</h5>
+                    <div id="historyList" class="small"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ESCOLHA DE PERFIL -->
+    <div class="modal fade" id="profileModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Escolha seu perfil no PilaMarket</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <button onclick="selectProfile('Sá')" class="btn btn-outline-light w-100 py-4 profile-btn">
+                                <strong>Sá</strong>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button onclick="selectProfile('Pedro')" class="btn btn-outline-light w-100 py-4 profile-btn">
+                                <strong>Pedro</strong>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button onclick="selectProfile('Silva')" class="btn btn-outline-light w-100 py-4 profile-btn">
+                                <strong>Silva</strong>
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button onclick="selectProfile('Admin')" class="btn btn-outline-light w-100 py-4 profile-btn">
+                                <strong>Admin</strong>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE LOGIN -->
-    <div class="modal fade" id="loginModal" tabindex="-1">
+    <!-- MODAL PASSWORD (apenas para Admin) -->
+    <div class="modal fade" id="passwordModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-0">
-                    <h5 class="modal-title">Entrar no NeoPredict</h5>
+                    <h5 class="modal-title">Acesso Administrador</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <input id="usernameInput" type="text" class="form-control bg-dark text-white" value="admin" placeholder="admin">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input id="passwordInput" type="password" class="form-control bg-dark text-white" value="1234" placeholder="1234">
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" checked>
-                        <label class="form-check-label">Lembrar sessão</label>
+                        <label class="form-label">Senha</label>
+                        <input id="adminPassword" type="password" class="form-control form-control-lg" placeholder="Digite a senha">
                     </div>
                 </div>
                 <div class="modal-footer border-0">
-                    <button onclick="attemptLogin()" class="btn btn-primary w-100 py-3">Entrar</button>
+                    <button onclick="checkAdminPassword()" class="btn btn-primary w-100 py-3">Entrar como Admin</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== DADOS DOS 3 USUÁRIOS ====================
+        // ==================== DADOS INICIAIS ====================
         let users = {
-            "Sá": {
-                balance: 1240,
-                position: "Sim • $340",
-                color: "#00ff9d"
-            },
-            "Pedro": {
-                balance: 980,
-                position: "Não • $120",
-                color: "#ff3366"
-            },
-            "Silva": {
-                balance: 1650,
-                position: "Sim • $800",
-                color: "#00ff9d"
-            }
-        }
+            "Sá": { balance: 100, position: "Sem posição" },
+            "Pedro": { balance: 100, position: "Sem posição" },
+            "Silva": { balance: 100, position: "Sem posição" }
+        };
         
-        let currentUser = "Sá"   // usuário selecionado para apostar
+        let currentUser = null;
+        let isAdmin = false;
         
-        // Histórico inicial
-        let history = [
-            {user: "Sá", action: "comprou SIM", amount: 150, market: "Copa 2030"},
-            {user: "Pedro", action: "comprou NÃO", amount: 80, market: "Copa 2030"},
-            {user: "Silva", action: "comprou SIM", amount: 300, market: "Copa 2030"}
-        ]
+        let history = [];
         
-        // Dados do gráfico (igual ao da imagem)
         let chartData = {
-            labels: ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"],
-            values: [68, 75, 82, 79, 71, 68, 87]
-        }
+            labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+            values: [62, 68, 75, 71, 78, 82, 84]
+        };
         
         let probabilityChart;
         
-        // ==================== FUNÇÕES ====================
+        // ==================== INICIALIZAÇÃO ====================
         function initChart() {
-            const ctx = document.getElementById("probabilityChart")
+            const ctx = document.getElementById("probabilityChart");
             probabilityChart = new Chart(ctx, {
                 type: "line",
                 data: {
                     labels: chartData.labels,
                     datasets: [{
-                        label: "Probabilidade de SIM",
+                        label: "Probabilidade SIM",
                         data: chartData.values,
-                        borderColor: "#00f0ff",
+                        borderColor: "#007bff",
                         borderWidth: 3,
-                        tension: 0.4,
-                        pointBackgroundColor: "#00ff9d",
-                        pointRadius: 4,
-                        pointHoverRadius: 6
+                        tension: 0.35,
+                        pointBackgroundColor: "#fff",
+                        pointBorderWidth: 2
                     }]
                 },
                 options: {
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { min: 60, max: 100, grid: { color: "#1e2a44" }, ticks: { color: "#aaa", callback: v => v + "%" } },
+                        y: { min: 50, max: 100, grid: { color: "#1e2a44" }, ticks: { color: "#aaa", callback: v => v + "%" } },
                         x: { grid: { color: "#1e2a44" }, ticks: { color: "#aaa" } }
                     }
                 }
-            })
+            });
         }
         
         function updateChart(days) {
-            // Simula mudança de dados
-            if (days === "30") {
-                chartData.values = [45, 52, 61, 73, 79, 84, 87]
-            } else if (days === "7") {
-                chartData.values = [68, 75, 82, 79, 71, 68, 87]
-            } else {
-                chartData.values = [82, 79, 85, 83, 81, 84, 87]
-            }
-            probabilityChart.data.datasets[0].data = chartData.values
-            probabilityChart.update()
+            if (days === "30") chartData.values = [51, 55, 59, 64, 70, 76, 84];
+            else if (days === "1") chartData.values = [80, 79, 82, 83, 81, 84, 84];
+            else chartData.values = [62, 68, 75, 71, 78, 82, 84];
+            probabilityChart.data.datasets[0].data = chartData.values;
+            probabilityChart.update();
         }
         
         function renderUsersList() {
-            const container = document.getElementById("usersList")
-            container.innerHTML = ""
-            
+            const container = document.getElementById("usersList");
+            container.innerHTML = "";
             Object.keys(users).forEach(name => {
-                const u = users[name]
-                const div = document.createElement("div")
-                div.className = "d-flex align-items-center justify-content-between user-pill"
+                const u = users[name];
+                const div = document.createElement("div");
+                div.className = "d-flex justify-content-between align-items-center p-3 border-bottom";
                 div.innerHTML = `
-                    <div class="d-flex align-items-center gap-3">
-                        <div style="background:${u.color}; width:28px; height:28px; border-radius:50%;"></div>
-                        <strong>${name}</strong>
-                    </div>
+                    <div><strong>${name}</strong></div>
                     <div class="text-end">
                         <div class="small text-muted">Saldo</div>
                         <strong>$${u.balance}</strong>
-                        <div class="small mt-1">${u.position}</div>
+                        <div class="small text-muted">${u.position}</div>
                     </div>
-                `
-                container.appendChild(div)
-            })
+                `;
+                container.appendChild(div);
+            });
         }
         
         function renderHistory() {
-            const container = document.getElementById("historyList")
-            container.innerHTML = ""
-            
+            const container = document.getElementById("historyList");
+            container.innerHTML = "";
+            if (history.length === 0) {
+                container.innerHTML = `<p class="text-muted text-center py-4">Nenhuma aposta ainda</p>`;
+                return;
+            }
             history.forEach(item => {
-                const div = document.createElement("div")
-                div.className = "d-flex justify-content-between py-2 border-bottom border-secondary"
+                const div = document.createElement("div");
+                div.className = "d-flex justify-content-between py-3 border-bottom";
                 div.innerHTML = `
-                    <div><strong>${item.user}</strong> ${item.action}</div>
+                    <div><strong>${item.user}</strong> apostou <strong>${item.side}</strong></div>
                     <div class="text-end">
-                        <span class="text-success">+$${item.amount}</span><br>
-                        <small class="text-muted">${item.market}</small>
+                        <span class="text-success">$${item.amount}</span>
                     </div>
-                `
-                container.appendChild(div)
-            })
+                `;
+                container.appendChild(div);
+            });
         }
         
-        function renderUserSelector() {
-            const container = document.getElementById("userSelector")
-            container.innerHTML = ""
+        // ==================== LOGIN E PERFIS ====================
+        function showProfileModal() {
+            const modal = new bootstrap.Modal(document.getElementById("profileModal"));
+            modal.show();
+        }
+        
+        function selectProfile(profile) {
+            bootstrap.Modal.getInstance(document.getElementById("profileModal")).hide();
             
-            Object.keys(users).forEach(name => {
-                const btn = document.createElement("button")
-                btn.className = `user-pill flex-fill ${name === currentUser ? "active" : ""}`
-                btn.textContent = name
-                btn.onclick = () => {
-                    currentUser = name
-                    renderUserSelector()
-                    document.getElementById("currentUserBalance").innerHTML = `${name} • $${users[name].balance}`
-                }
-                container.appendChild(btn)
-            })
-        }
-        
-        function showLoginModal() {
-            const modal = new bootstrap.Modal(document.getElementById("loginModal"))
-            modal.show()
-        }
-        
-        function attemptLogin() {
-            const username = document.getElementById("usernameInput").value.trim()
-            const password = document.getElementById("passwordInput").value.trim()
+            if (profile === "Admin") {
+                const pwModal = new bootstrap.Modal(document.getElementById("passwordModal"));
+                pwModal.show();
+                return;
+            }
             
-            if (username === "admin" && password === "1234") {
-                // Login bem sucedido
-                bootstrap.Modal.getInstance(document.getElementById("loginModal")).hide()
-                
-                document.getElementById("loginBtn").classList.add("d-none")
-                document.getElementById("loginStatus").classList.remove("d-none")
-                document.getElementById("currentUserDisplay").textContent = "Admin"
-                
-                // Ativa painel de aposta
-                document.getElementById("betLocked").classList.add("d-none")
-                document.getElementById("betPanel").classList.remove("d-none")
-                
-                // Ativa painel ADMIN
-                document.getElementById("adminPanel").classList.remove("d-none")
-                
-                // Renderiza tudo
-                renderUserSelector()
-                document.getElementById("currentUserBalance").innerHTML = `${currentUser} • $${users[currentUser].balance}`
-                
-                alert("✅ Login realizado com sucesso!\n\nVocê agora pode apostar como Sá, Pedro ou Silva.\nO Admin pode resolver o mercado no painel lateral.")
+            // Login como usuário normal
+            currentUser = profile;
+            isAdmin = false;
+            finishLogin();
+        }
+        
+        function checkAdminPassword() {
+            const password = document.getElementById("adminPassword").value;
+            if (password === "1234") {
+                bootstrap.Modal.getInstance(document.getElementById("passwordModal")).hide();
+                currentUser = "Admin";
+                isAdmin = true;
+                finishLogin();
             } else {
-                alert("❌ Usuário ou senha incorretos!\n\nDica: admin / 1234")
+                alert("❌ Senha incorreta! (Dica: 1234)");
             }
         }
         
+        function finishLogin() {
+            document.getElementById("loginBtn").classList.add("d-none");
+            document.getElementById("loginStatus").classList.remove("d-none");
+            document.getElementById("currentUserDisplay").textContent = currentUser;
+            
+            // Atualiza saldo
+            document.getElementById("userBalanceDisplay").textContent = `$${users[currentUser] ? users[currentUser].balance : "100"}`;
+            
+            // Mostra painel de aposta
+            document.getElementById("betLocked").classList.add("d-none");
+            document.getElementById("betPanel").classList.remove("d-none");
+            
+            // Mostra painel admin se for admin
+            if (isAdmin) {
+                document.getElementById("adminPanel").classList.remove("d-none");
+            }
+            
+            // Atualiza saldo no painel
+            if (users[currentUser]) {
+                document.getElementById("currentUserBalanceDisplay").textContent = `$${users[currentUser].balance}`;
+            }
+            
+            alert(`✅ Bem-vindo(a), ${currentUser}!`);
+            renderUsersList();
+            renderHistory();
+        }
+        
+        // ==================== APOSTAS ====================
         function placeBet(isYes) {
-            alert(`✅ Você selecionou ${isYes ? "SIM" : "NÃO"} para o usuário ${currentUser}\n\nValor: $${document.getElementById("betAmount").value}`)
-            // Aqui poderia fazer mais lógica, mas mantemos simples
+            if (!currentUser) return;
+            alert(`✅ Você escolheu ${isYes ? "SIM" : "NÃO"}`);
         }
         
         function confirmBet() {
-            const amount = parseFloat(document.getElementById("betAmount").value) || 50
-            users[currentUser].balance -= amount
-            document.getElementById("currentUserBalance").innerHTML = `${currentUser} • $${users[currentUser].balance}`
+            if (!currentUser || !users[currentUser]) return;
             
-            // Registra no histórico
+            const amount = parseFloat(document.getElementById("betAmount").value) || 20;
+            if (amount > users[currentUser].balance) {
+                alert("Saldo insuficiente!");
+                return;
+            }
+            
+            users[currentUser].balance -= amount;
+            const side = Math.random() > 0.5 ? "SIM" : "NÃO";
+            
             history.unshift({
                 user: currentUser,
-                action: "comprou " + (Math.random() > 0.5 ? "SIM" : "NÃO"),
-                amount: amount,
-                market: "Copa 2030"
-            })
-            renderHistory()
-            renderUsersList()
+                side: side,
+                amount: amount
+            });
             
-            alert(`🎟️ Aposta de $${amount} registrada com sucesso para ${currentUser}!\n\nO dinheiro sai da carteira dele agora.`)
+            document.getElementById("currentUserBalanceDisplay").textContent = `$${users[currentUser].balance}`;
+            document.getElementById("userBalanceDisplay").textContent = `$${users[currentUser].balance}`;
+            
+            renderUsersList();
+            renderHistory();
+            
+            alert(`🎟️ Aposta de $${amount} (${side}) registrada com sucesso!`);
         }
         
         function quickAmount(val) {
-            document.getElementById("betAmount").value = val
+            document.getElementById("betAmount").value = val;
         }
         
+        // ==================== RESOLVER MERCADO (ADMIN) ====================
         function resolveMarket(result) {
-            const message = result 
-                ? "✅ Mercado RESOLVIDO como SIM. Pagamentos automáticos realizados!"
-                : "❌ Mercado RESOLVIDO como NÃO. Pagamentos automáticos realizados!"
+            const msg = result 
+                ? "✅ Mercado resolvido como SIM. Pagamentos automáticos feitos!"
+                : "❌ Mercado resolvido como NÃO. Pagamentos automáticos feitos!";
             
-            alert(message + "\n\nSá, Pedro e Silva receberam ou perderam dinheiro de acordo com suas posições.")
+            alert(msg);
             
-            // Simula pagamento
+            // Simula distribuição simples
             if (result) {
-                users["Sá"].balance += 420
-                users["Silva"].balance += 920
-                users["Pedro"].balance -= 80
+                users["Sá"].balance += 45;
+                users["Silva"].balance += 30;
+                users["Pedro"].balance -= 25;
             } else {
-                users["Pedro"].balance += 220
-                users["Sá"].balance -= 150
-                users["Silva"].balance -= 300
+                users["Pedro"].balance += 60;
+                users["Sá"].balance -= 20;
+                users["Silva"].balance -= 15;
             }
             
-            renderUsersList()
-            renderHistory()
+            renderUsersList();
+            renderHistory();
         }
         
-        // ==================== INICIALIZAÇÃO ====================
+        // ==================== INICIALIZAÇÃO DA PÁGINA ====================
         window.onload = function() {
-            initChart()
-            renderUsersList()
-            renderHistory()
-            // O seletor só aparece após login
-            console.log("%c✅ NeoPredict carregado com sucesso! (estilo 100% Polymarket neon)", "color:#00f0ff; font-size:13px")
-        }
+            initChart();
+            renderUsersList();
+            renderHistory();
+            console.log("%c✅ PilaMarket carregado com sucesso (versão profissional limpa)", "color:#007bff; font-size:13px");
+        };
     </script>
 </body>
 </html>
